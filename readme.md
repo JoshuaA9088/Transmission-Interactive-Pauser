@@ -2,7 +2,11 @@
 
 > Automatically pauses all torrents when specific apps are running.
 
-<img src="https://raw.githubusercontent.com/JoshuaA9088/Transmission-Interactive-Pauser/master/assets/demo.webm" alt="Demo">
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true">
+    <source src="https://raw.githubusercontent.com/JoshuaA9088/Transmission-Interactive-Pauser/master/assets/demo.webm" type="video/webm">
+  </video>
+</figure>
 
 ### Clone
 
