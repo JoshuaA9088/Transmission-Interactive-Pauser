@@ -1,6 +1,6 @@
 __pycache__/
 .vscode/
 settings.ini
-**/game_settings.ini
+**/games_settings.ini
 **/server_settings.ini
 *.mp4
