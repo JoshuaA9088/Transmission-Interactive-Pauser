@@ -27,7 +27,7 @@ tc = transmissionrpc.Client(
 )
 
 server = MinecraftServer.lookup(
-    f"{config['MINECRAFT']['IP']} : {config['MINECRAFT']['IP']}")
+    f"{config['MINECRAFT']['IP']} : {config['MINECRAFT']['PORT']}")
 
 
 def common_member(a: list, b: list) -> bool:
@@ -50,7 +50,7 @@ def stop_torrents() -> None:
             t.stop()
 
 
-def client_vpn():
+def client_vpn() -> bool:
     f = open(config["VPN"]["LOG_PATH"])
     csv_reader = csv.reader(f, delimiter=",")
     user_data = []
@@ -65,7 +65,7 @@ def client_vpn():
     return (len(user_data) > 2)
 
 
-def client_mc():
+def client_mc() -> bool:
     query = server.query()
     players = [name.lower() for name in query.players.names]
     return (players != EXCLUDED_USERS and len(players) > 0)
@@ -73,7 +73,7 @@ def client_mc():
 
 while True:
     status = server.status()
-    if client_vpn() or client_mc:
+    if client_mc():
         stop_torrents()
     else:
         start_torrents()

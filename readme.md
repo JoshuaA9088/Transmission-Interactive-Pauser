@@ -59,7 +59,7 @@ LOG_PATH = PATH_TO_OPENVPN-STATUS.LOG
 CLIENTS = Client1, client2 ; Comma seperated lists of VPN clients
 
 [MINECRAFT]
-IP = IP_OF_MC_SERVER ; Typically localhost
+IP = IP_OF_MC_SERVER ; Typically 0.0.0.0
 PORT = PORT_OF_MC_SERVER ; Typically 25565
 EXCLUDED_USERS = Client1, client2; Comma seperated list of MC usernames to exclude from torrent pausing.
 ```

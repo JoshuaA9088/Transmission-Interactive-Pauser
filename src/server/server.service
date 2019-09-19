@@ -1,0 +1,16 @@
+# Interactive Transmission Pauser Systemd Service
+# /etc/systemd/system/transmission_pauser.service
+[Unit]
+Description=Interactive Transmission Pauser
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/opt/transmission_pauser
+User=transmissionpauser
+Group=transmissionpauser
+
+Restart=always
+ExecStart=/usr/bin/python3 /opt/transmission_pauser/server.py
+
+[Install]
+WantedBy=multi-user.target
