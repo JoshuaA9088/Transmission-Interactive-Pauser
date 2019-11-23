@@ -1,0 +1,13 @@
+{
+    "TRANSMISSION": {
+        "IP": "IP_OF_TRANSMISSION",
+        "PORT": "PORT_OF_TRANSMISSION",
+        "USER": "USERNAME",
+        "PASSWORD": "PASSWORD"
+    },
+    "APPS": [
+        "app1.exe",
+        "app2.exe",
+        "app3.exe"
+    ]
+}

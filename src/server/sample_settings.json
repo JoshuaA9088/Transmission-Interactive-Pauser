@@ -1,0 +1,26 @@
+{
+    "TRANSMISSION": {
+        "IP": "IP_OF_TRANSMISSION",
+        "PORT": "PORT_OF_TRANSMISSION",
+        "USER": "USERNAME",
+        "PASSWORD": "PASSWORD"
+    },
+    "VPN": {
+        "LOG": "PATH_TO_LOG",
+        "MIN_CLIENTS": "1",
+        "CLIENTS": [
+            "Client1",
+            "Client2",
+            "Client3"
+        ]
+    },
+    "MINECRAFT": {
+        "IP": "IP_OF_MC_SERVER",
+        "PORT": "PORT_OF_MC_SERVER",
+        "EXCLUDED_USERS": [
+            "Client1",
+            "Client2",
+            "Client3"
+        ]
+    }
+}

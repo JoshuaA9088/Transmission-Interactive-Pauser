@@ -5,29 +5,7 @@ from IPy import IP
 from time import sleep
 import configparser
 import time
-
-config = configparser.ConfigParser()
-config.read("settings.ini")
-
-# Parse CLIENTS config into list
-CLIENTS = config["VPN"]["CLIENTS"]
-CLIENTS = CLIENTS.replace(",", "")
-CLIENTS = list(CLIENTS.split())
-
-EXCLUDED_USERS = config["MINECRAFT"]["EXCLUDED_USERS"]
-EXCLUDED_USERS = EXCLUDED_USERS.replace(",", "")
-EXCLUDED_USERS = EXCLUDED_USERS.lower()
-EXCLUDED_USERS = list(EXCLUDED_USERS.split())
-
-tc = transmissionrpc.Client(
-    address=config["CLIENT"]["IP"],
-    port=config["CLIENT"]["PORT"],
-    user=config["CLIENT"]["USER"],
-    password=config["CLIENT"]["PASSWORD"]
-)
-
-server = MinecraftServer.lookup(
-    f"{config['MINECRAFT']['IP']} : {config['MINECRAFT']['PORT']}")
+import jstyleson
 
 
 def common_member(a: list, b: list) -> bool:
@@ -36,45 +14,68 @@ def common_member(a: list, b: list) -> bool:
     return (a & b)
 
 
-def start_torrents() -> None:
+def start_torrents(tc) -> None:
     torrents = tc.get_torrents()
     for t in torrents:
         if t.status == "stopped":
             t.start()
 
 
-def stop_torrents() -> None:
+def stop_torrents(tc) -> None:
     torrents = tc.get_torrents()
     for t in torrents:
         if t.status != "stopped":
             t.stop()
 
 
-def client_vpn() -> bool:
-    f = open(config["VPN"]["LOG_PATH"])
+def client_vpn(log_path, clients, num_pause) -> bool:
+    f = open(log_path)
     csv_reader = csv.reader(f, delimiter=",")
     user_data = []
 
     for row in csv_reader:
-        if common_member(CLIENTS, row):
+        if common_member(clients, row):
             try:
                 IP(row[0])
             except ValueError:
                 user_data.append(row)
     f.close()
-    return (len(user_data) > 2)
+    return (len(user_data) > num_pause)
 
 
-def client_mc() -> bool:
+def client_mc(server, excluded) -> bool:
     query = server.query()
     players = [name.lower() for name in query.players.names]
-    return (players != EXCLUDED_USERS and len(players) > 0)
+    return (players != excluded and len(players) > 0)
 
 
-while True:
-    status = server.status()
-    if client_mc():
-        stop_torrents()
-    else:
-        start_torrents()
-    time.sleep(10)
+if __name__ == "__main__":
+
+    with open("settings.json") as config_file:
+        config = jstyleson.load(config_file)
+
+    # VPN Parameters
+    LOG_PATH = config["VPN"]["LOG"]
+    MIN_CLIENTS = config["VPN"]["MIN_CLIENTS"]
+    CLIENTS = config["VPN"]["CLIENTS"]
+
+    # Minecraft Parameters
+    EXCLUDED_USERS = config["MINECRAFT"]["EXCLUDED_USERS"]
+
+    tc = transmissionrpc.Client(
+        address=config["TRANSMISSION"]["IP"],
+        port=config["TRANSMISSION"]["PORT"],
+        user=config["TRANSMISSION"]["USER"],
+        password=config["TRANSMISSION"]["PASSWORD"]
+    )
+
+    server = MinecraftServer.lookup(
+        f"{config['MINECRAFT']['IP']} : {config['MINECRAFT']['PORT']}")
+
+    while True:
+        status = server.status()
+        if client_mc(server, EXCLUDED_USERS) or client_vpn(LOG_PATH, MIN_CLIENTS):
+            stop_torrents()
+        else:
+            start_torrents()
+        time.sleep(30)
