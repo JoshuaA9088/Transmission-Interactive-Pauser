@@ -1,17 +1,16 @@
-from mcstatus import MinecraftServer
-import transmissionrpc
 import csv
-from IPy import IP
-from time import sleep
-import configparser
 import time
+
 import jstyleson
+import transmissionrpc
+from IPy import IP
+from mcstatus import MinecraftServer
 
 
 def common_member(a: list, b: list) -> bool:
     a = set(a)
     b = set(b)
-    return (a & b)
+    return a & b
 
 
 def start_torrents(tc) -> None:
@@ -40,13 +39,13 @@ def client_vpn(log_path, clients, num_pause) -> bool:
             except ValueError:
                 user_data.append(row)
     f.close()
-    return (len(user_data) > num_pause)
+    return len(user_data) > num_pause
 
 
 def client_mc(server, excluded) -> bool:
     query = server.query()
     players = [name.lower() for name in query.players.names]
-    return (players != excluded and len(players) > 0)
+    return players != excluded and len(players) > 0
 
 
 if __name__ == "__main__":
@@ -66,11 +65,12 @@ if __name__ == "__main__":
         address=config["TRANSMISSION"]["IP"],
         port=config["TRANSMISSION"]["PORT"],
         user=config["TRANSMISSION"]["USER"],
-        password=config["TRANSMISSION"]["PASSWORD"]
+        password=config["TRANSMISSION"]["PASSWORD"],
     )
 
     server = MinecraftServer.lookup(
-        f"{config['MINECRAFT']['IP']} : {config['MINECRAFT']['PORT']}")
+        f"{config['MINECRAFT']['IP']} : {config['MINECRAFT']['PORT']}"
+    )
 
     while True:
         status = server.status()

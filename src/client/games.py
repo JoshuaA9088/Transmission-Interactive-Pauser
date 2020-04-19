@@ -1,7 +1,8 @@
-import transmissionrpc
-import psutil
-from time import sleep
 import json
+from time import sleep
+
+import psutil
+import transmissionrpc
 
 
 def start_torrents(tc) -> None:
@@ -20,7 +21,7 @@ def stop_torrents(tc) -> None:
 
 def interrupt_transmission(progs):
     processes = (p.name() for p in psutil.process_iter())
-    return (set(progs) & set(processes))
+    return set(progs) & set(processes)
 
 
 if __name__ == "__main__":
@@ -32,7 +33,7 @@ if __name__ == "__main__":
         address=config["TRANSMISSION"]["IP"],
         port=config["TRANSMISSION"]["PORT"],
         user=config["TRANSMISSION"]["USER"],
-        password=config["TRANSMISSION"]["PASSWORD"]
+        password=config["TRANSMISSION"]["PASSWORD"],
     )
 
     PROGRAMS = config["APPS"]
